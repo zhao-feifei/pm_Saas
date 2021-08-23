@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 const state = {
   token: getToken(), //初始化vuex时从缓存中读取
   userInfo: {}
@@ -27,10 +27,15 @@ const actions = {
 
     context.commit('setToken', result)
   },
+  // 获取用户资料action
   async getUserInfo(context) {
-    const result = await getUserInfo()
-    context.commit('setUserInfo', result)
-    return result
+    const result = await getUserInfo() // result就是用户的基本资料
+    const baseInfo = await getUserDetailById(result.userId) // 为了获取头像
+    const baseResult = { ...result, ...baseInfo } // 将两个接口结果合并
+    // 此时已经获取到了用户的基本资料 迫不得已 为了头像再次调用一个接口
+    context.commit('setUserInfo', baseResult) // 提交mutations
+    // 加一个点睛之笔  这里这一步，暂时用不到，但是请注意，这给我们后边会留下伏笔
+    return baseResult
   }
 }
 
