@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 const state = {
   token: getToken(), //初始化vuex时从缓存中读取
@@ -9,7 +9,7 @@ const mutations = {
     state.token = token //将数据设置给vuex
     setToken(token) //同步到缓存
   },
-  removeToken(token) {
+  removeToken(state) {
     state.token = null //置空后同步到缓存
     removeToken()
   },
@@ -23,9 +23,10 @@ const mutations = {
 const actions = {
   async login(context, data) {
     //调用api接口
-    const result = await login(data)
+    const result = await login(data) //拿到token
 
-    context.commit('setToken', result)
+    context.commit('setToken', result) //设置token
+    setTimeStamp()
   },
   // 获取用户资料action
   async getUserInfo(context) {
@@ -36,6 +37,13 @@ const actions = {
     context.commit('setUserInfo', baseResult) // 提交mutations
     // 加一个点睛之笔  这里这一步，暂时用不到，但是请注意，这给我们后边会留下伏笔
     return baseResult
+  },
+  //登出操作
+  logout(context) {
+    //删除token  包括vuex和缓存中的
+    context.commit('removeToken')
+    //删除用户资料
+    context.commit('removeUserInfo')
   }
 }
 
