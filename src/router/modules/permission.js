@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/permission'),
       //路由的元信息
-      meta: { title: '权限管理' } //左侧导航区域读取领这个title属性
+      meta: { title: '权限管理', icon: 'lock' } //左侧导航区域读取领这个title属性
     }
   ]
 }

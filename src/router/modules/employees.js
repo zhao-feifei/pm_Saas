@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/employees'),
       //路由的元信息
-      meta: { title: '员工管理' } //左侧导航区域读取领这个title属性
+      meta: { title: '员工管理', icon: 'people' } //左侧导航区域读取领这个title属性
     }
   ]
 }

@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/social'),
       //路由的元信息
-      meta: { title: '社保' } //左侧导航区域读取领这个title属性
+      meta: { title: '社保', icon: 'table' } //左侧导航区域读取领这个title属性
     }
   ]
 }

@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/setting'),
       //路由的元信息
-      meta: { title: '公司设置' } //左侧导航区域读取领这个title属性
+      meta: { title: '公司设置', icon: 'setting' } //左侧导航区域读取领这个title属性
     }
   ]
 }

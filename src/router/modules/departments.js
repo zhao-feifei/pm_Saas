@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/departments'),
       //路由的元信息
-      meta: { title: '组织架构' } //左侧导航区域读取领这个title属性
+      meta: { title: '组织架构', icon: 'tree' } //左侧导航区域读取领这个title属性
     }
   ]
 }

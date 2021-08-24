@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/approvals'),
       //路由的元信息
-      meta: { title: '审批' } //左侧导航区域读取领这个title属性
+      meta: { title: '审批', icon: 'tree-table' } //左侧导航区域读取领这个title属性
     }
   ]
 }

@@ -11,7 +11,7 @@ export default {
       path: '',
       component: () => import('@/views/salarys'),
       //路由的元信息
-      meta: { title: '工资' } //左侧导航区域读取领这个title属性
+      meta: { title: '工资', icon: 'money' } //左侧导航区域读取领这个title属性
     }
   ]
 }
