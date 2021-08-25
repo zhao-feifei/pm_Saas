@@ -12,7 +12,11 @@
         >
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
-          <TreeTools slot-scope="{ data }" :tree-node="data"></TreeTools>
+          <TreeTools
+            slot-scope="{ data }"
+            :tree-node="data"
+            @delDepts="getDepartments"
+          ></TreeTools>
         </el-tree>
       </el-card>
     </div>
@@ -22,6 +26,7 @@
 <script>
 import TreeTools from './components/tree-tolls'
 import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils/index'
 export default {
   components: {
     TreeTools
@@ -50,7 +55,7 @@ export default {
     async getDepartments() {
       const result = await getDepartments()
       this.company = { name: result.companyName, manager: '负责人' }
-      this.departs = transListToTreeData(result.depts, '') // 需要将其转化成树形结构
+      this.departs = tranListToTreeData(result.depts, '') // 需要将其转化成树形结构
     }
   }
 }
