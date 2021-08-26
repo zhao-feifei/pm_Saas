@@ -4,7 +4,11 @@
       <!-- 组织架构内容 -->
       <el-card class="tree-card">
         <!-- 用了一个行列布局 -->
-        <TreeTools :tree-node="company" :isRoot="true"></TreeTools>
+        <TreeTools
+          :tree-node="company"
+          :isRoot="true"
+          @addDepts="addDepts"
+        ></TreeTools>
         <el-tree
           :data="departs"
           :props="defaultProps"
@@ -15,9 +19,11 @@
           <TreeTools
             slot-scope="{ data }"
             :tree-node="data"
+            @addDepts="addDepts"
             @delDepts="getDepartments"
           ></TreeTools>
         </el-tree>
+        <AddDept :show-dialog="showDialog"></AddDept>
       </el-card>
     </div>
   </div>
@@ -27,9 +33,11 @@
 import TreeTools from './components/tree-tolls'
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils/index'
+import AddDept from './components/add-dept.vue'
 export default {
   components: {
-    TreeTools
+    TreeTools,
+    AddDept
   },
   data() {
     return {
@@ -45,7 +53,9 @@ export default {
       ],
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
-      }
+      },
+      showDialog: false, //显示添加部门的弹窗
+      node: null
     }
   },
   created() {
@@ -56,6 +66,10 @@ export default {
       const result = await getDepartments()
       this.company = { name: result.companyName, manager: '负责人' }
       this.departs = tranListToTreeData(result.depts, '') // 需要将其转化成树形结构
+    },
+    addDepts(node) {
+      this.showDialog = true
+      this.node = node
     }
   }
 }

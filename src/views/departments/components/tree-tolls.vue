@@ -56,7 +56,7 @@ export default {
     handleCommand(type) {
       if (type === 'add') {
         //添加子部门
-        console.log('111')
+        this.$emit('addDepts', this.treeNode)
       } else if (type === 'edit') {
         //编辑部门
       } else {
