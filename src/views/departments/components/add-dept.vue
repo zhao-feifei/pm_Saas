@@ -1,7 +1,12 @@
 <template>
   <!-- 弹层组件 -->
-  <el-dialog title="新增部门" :visible="showDialog">
-    <el-form :model="formData" :rules="rules" label-width="120px">
+  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+    <el-form
+      ref="deptForm"
+      :model="formData"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item prop="name" label="部门名称">
         <el-input
           v-model="formData.name"
@@ -21,7 +26,15 @@
           v-model="formData.manager"
           style="width:80%"
           placeholder="请选择"
-        />
+          @focus="getEmployeeSimple"
+        >
+          <el-option
+            v-for="item in peoples"
+            :key="item.id"
+            :label="item.username"
+            :value="item.username"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item prop="introduce" label="部门介绍">
         <el-input
@@ -37,15 +50,16 @@
     <el-row slot="footer" type="flex" justify="center">
       <!-- 列被分为24 -->
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOk">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
+import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -111,7 +125,31 @@ export default {
             max: 300
           }
         ]
-      }
+      },
+      peoples: []
+    }
+  },
+  methods: {
+    async getEmployeeSimple() {
+      this.peoples = await getEmployeeSimple()
+    },
+    //确定按钮的方法
+    btnOk() {
+      this.$refs.deptForm.validate(async isOK => {
+        if (isOK) {
+          // 校验通过，表示可以提交了
+          await addDepartments({ ...this.formData, pid: this.treeNode.id }) // 调用新增接口 添加父部门的id
+          this.$emit('addDepts')
+          //修改showDialog的值
+          this.$emit('update:showDialog', false)
+          this.$message.success('添加成功！')
+        }
+      })
+    },
+    //取消按钮
+    btnCancel() {
+      this.$emit('update:showDialog', false)
+      this.$refs.deptForm.resetFields()
     }
   }
 }

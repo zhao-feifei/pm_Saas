@@ -23,7 +23,11 @@
             @delDepts="getDepartments"
           ></TreeTools>
         </el-tree>
-        <AddDept :show-dialog="showDialog" :tree-node="node"></AddDept>
+        <AddDept
+          :show-dialog.sync="showDialog"
+          :tree-node="node"
+          @addDepts="getDepartments"
+        ></AddDept>
       </el-card>
     </div>
   </div>
@@ -64,7 +68,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(result.depts, '') // 需要将其转化成树形结构
     },
     addDepts(node) {
