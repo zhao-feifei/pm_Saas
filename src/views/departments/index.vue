@@ -23,7 +23,7 @@
             @delDepts="getDepartments"
           ></TreeTools>
         </el-tree>
-        <AddDept :show-dialog="showDialog"></AddDept>
+        <AddDept :show-dialog="showDialog" :tree-node="node"></AddDept>
       </el-card>
     </div>
   </div>
