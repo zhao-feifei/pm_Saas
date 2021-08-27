@@ -21,9 +21,11 @@
             :tree-node="data"
             @addDepts="addDepts"
             @delDepts="getDepartments"
+            @editDepts="editDepts"
           ></TreeTools>
         </el-tree>
         <AddDept
+          ref="addDept"
           :show-dialog.sync="showDialog"
           :tree-node="node"
           @addDepts="getDepartments"
@@ -74,6 +76,12 @@ export default {
     addDepts(node) {
       this.showDialog = true
       this.node = node
+    },
+    editDepts(node) {
+      this.showDialog = true
+      this.node = node
+      //调用子组件中获取部门详情的方法
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <!-- 弹层组件 -->
-  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+  <el-dialog :title="showTitles" :visible="showDialog" @close="btnCancel">
     <el-form
       ref="deptForm"
       :model="formData"
@@ -58,7 +58,12 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments'
+import {
+  getDepartments,
+  addDepartments,
+  getDepartDetail,
+  updateDepartments
+} from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -129,6 +134,11 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    showTitles() {
+      return this.formData.id ? '编辑部门' : '新增子部门'
+    }
+  },
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
@@ -137,8 +147,15 @@ export default {
     btnOk() {
       this.$refs.deptForm.validate(async isOK => {
         if (isOK) {
+          if (this.formData.id) {
+            //编辑
+            await updateDepartments(this.formData)
+          } else {
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
+
           // 校验通过，表示可以提交了
-          await addDepartments({ ...this.formData, pid: this.treeNode.id }) // 调用新增接口 添加父部门的id
+          // 调用新增接口 添加父部门的id
           this.$emit('addDepts')
           //修改showDialog的值
           this.$emit('update:showDialog', false)
@@ -148,8 +165,19 @@ export default {
     },
     //取消按钮
     btnCancel() {
+      //重置数据 因为resetFields只能重置表单上的数据  编辑中的id无法重置
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       this.$emit('update:showDialog', false)
       this.$refs.deptForm.resetFields()
+    },
+    //获取详情方法
+    async getDepartDetail(id) {
+      this.formData = await getDepartDetail(id)
     }
   }
 }
