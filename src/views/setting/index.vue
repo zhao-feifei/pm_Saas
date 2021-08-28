@@ -10,11 +10,24 @@
               >
             </el-row>
             <!-- 表格区域 -->
-            <el-table border="">
-              <el-table-column label="序号" width="120"> </el-table-column>
-              <el-table-column label="角色名称" width="240"> </el-table-column>
-              <el-table-column label="描述"> </el-table-column>
-              <el-table-column label="操作">
+            <el-table border="" :data="this.list">
+              <el-table-column
+                type="index"
+                align="center"
+                label="序号"
+                width="120"
+              >
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="name"
+                label="角色名称"
+                width="240"
+              >
+              </el-table-column>
+              <el-table-column align="center" prop="description" label="描述">
+              </el-table-column>
+              <el-table-column align="center" label="操作">
                 <el-button size="small" type="success">分配权限</el-button>
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger">删除</el-button>
@@ -24,10 +37,15 @@
               type="flex"
               justify="center"
               align="middle"
-              style="height: 60px"
+              style="height:60px"
             >
-              <!-- 分页组件 -->
-              <el-pagination layout="prev,pager,next" />
+              <el-pagination
+                :current-page="page.page"
+                :page-size="page.pagesize"
+                :total="page.total"
+                layout="prev, pager, next"
+                @current-change="changePage"
+              />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="用户信息">
@@ -77,7 +95,34 @@
 </template>
 
 <script>
-export default {}
+import { getRoleList } from '@/api/seeting'
+export default {
+  data() {
+    return {
+      list: [], // 承接数组
+      page: {
+        // 放置页码及相关数据
+        page: 1,
+        pagesize: 2,
+        total: 0 // 记录总数
+      }
+    }
+  },
+  created() {
+    this.getRoleList()
+  },
+  methods: {
+    async getRoleList() {
+      const { rows, total } = await getRoleList(this.page)
+      this.page.total = total
+      this.list = rows
+    },
+    changePage(newPage) {
+      this.page.page = newPage
+      this.getRoleList()
+    }
+  }
+}
 </script>
 
 <style></style>
