@@ -45,7 +45,7 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-//定义动态路由变量
+// 动态路由
 export const asyncRoutes = [
   approvalsRouter,
   departmentsRouter,
@@ -60,8 +60,8 @@ export const asyncRoutes = [
 const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
-    scrollBehavior: () => ({ y: 0 }),
-    routes: [...asyncRoutes, ...constantRoutes]
+    scrollBehavior: () => ({ y: 0 }), // 管理滚动行为 如果出现滚动 切换就让 让页面回到顶部
+    routes: [...constantRoutes, ...asyncRoutes] // 临时合并所有的路由
   })
 
 const router = createRouter()
