@@ -28,9 +28,16 @@
               <el-table-column align="center" prop="description" label="描述">
               </el-table-column>
               <el-table-column align="center" label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template slot-scope="{ row }">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="deleteRole(row.id)"
+                    >删除</el-button
+                  >
+                </template>
               </el-table-column>
             </el-table>
             <el-row
@@ -95,7 +102,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo } from '@/api/seeting'
+import { getRoleList, getCompanyInfo, deleteRole } from '@/api/seeting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -120,17 +127,31 @@ export default {
     this.getCompanyInfo()
   },
   methods: {
+    //获取角色列表
     async getRoleList() {
       const { rows, total } = await getRoleList(this.page)
       this.page.total = total
       this.list = rows
     },
+    //获取公司信息
     async getCompanyInfo() {
       this.formData = await getCompanyInfo(this.companyId)
     },
+    //页码点击事件
     changePage(newPage) {
       this.page.page = newPage
       this.getRoleList()
+    },
+    async deleteRole(id) {
+      try {
+        await this.$confirm('您确定要删除这个角色吗？')
+        await deleteRole(id)
+        //重新获取数据
+        this.getRoleList()
+        this.$message.success('删除角色成功!')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
