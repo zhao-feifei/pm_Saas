@@ -30,7 +30,12 @@
               <el-table-column align="center" label="操作">
                 <template slot-scope="{ row }">
                   <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="editRole(row.id)"
+                    >编辑</el-button
+                  >
                   <el-button
                     size="small"
                     type="danger"
@@ -98,11 +103,39 @@
         </el-tabs>
       </el-card>
     </div>
+    <!-- 放置一个弹层组件 -->
+    <el-dialog title="编辑部门" :visible="showDialog" width="800px">
+      <el-form
+        ref="roleForm"
+        label-width="90px"
+        :model="roleForm"
+        :rules="roles"
+      >
+        <el-form-item prop="name" label="角色名称">
+          <el-input v-model="roleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" @click="btnCancel">取消</el-button>
+          <el-button type="primary" @click="btnOk">确定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/seeting'
+import {
+  getRoleList,
+  getCompanyInfo,
+  deleteRole,
+  getRoleDetail,
+  updateRole
+} from '@/api/seeting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -116,6 +149,17 @@ export default {
       },
       formData: {
         //公司信息
+      },
+      showDialog: false,
+      roleForm: {
+        name: '',
+        description: ''
+      },
+      //弹出层的表单验证规则
+      roles: {
+        name: [
+          { required: true, message: '角色名称不能为空！', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -152,7 +196,31 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id)
+      this.showDialog = true
+    },
+    async btnOk() {
+      try {
+        await this.$refs.roleForm.validate()
+        //校验通过才会执行下面的代码
+        console.log('111')
+        console.log('2222')
+        if (this.roleForm.id) {
+          await updateRole(this.roleForm)
+        } else {
+          // 新增业务
+        }
+
+        this.getRoleList()
+        this.$message.success('操作成功!')
+        this.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {}
   }
 }
 </script>
