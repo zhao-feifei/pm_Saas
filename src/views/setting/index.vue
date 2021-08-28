@@ -60,21 +60,21 @@
                 <el-input
                   disabled
                   style="width:400px"
-                  v-model="model"
+                  v-model="formData.name"
                 ></el-input>
               </el-form-item>
               <el-form-item label="公司地址">
                 <el-input
                   disabled
                   style="width:400px"
-                  v-model="model"
+                  v-model="formData.companyAddress"
                 ></el-input>
               </el-form-item>
               <el-form-item label="邮箱">
                 <el-input
                   disabled
                   style="width:400px"
-                  v-model="model"
+                  v-model="formData.mailbox"
                 ></el-input>
               </el-form-item>
               <el-form-item label="备注">
@@ -83,7 +83,7 @@
                   :rows="3"
                   disabled
                   style="width:400px"
-                  v-model="model"
+                  v-model="formData.remarks"
                 ></el-input>
               </el-form-item>
             </el-form>
@@ -95,7 +95,8 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/seeting'
+import { getRoleList, getCompanyInfo } from '@/api/seeting'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -105,17 +106,27 @@ export default {
         page: 1,
         pagesize: 2,
         total: 0 // 记录总数
+      },
+      formData: {
+        //公司信息
       }
     }
   },
+  computed: {
+    ...mapGetters(['companyId'])
+  },
   created() {
     this.getRoleList()
+    this.getCompanyInfo()
   },
   methods: {
     async getRoleList() {
       const { rows, total } = await getRoleList(this.page)
       this.page.total = total
       this.list = rows
+    },
+    async getCompanyInfo() {
+      this.formData = await getCompanyInfo(this.companyId)
     },
     changePage(newPage) {
       this.page.page = newPage
