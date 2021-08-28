@@ -38,3 +38,12 @@ export function updateRole(data) {
     data
   })
 }
+
+//新增角色
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    data,
+    method: 'post'
+  })
+}

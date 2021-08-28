@@ -5,7 +5,11 @@
         <el-tabs>
           <el-tab-pane label="角色管理">
             <el-row>
-              <el-button icon="el-icon-plus" size="small" type="primary"
+              <el-button
+                icon="el-icon-plus"
+                size="small"
+                type="primary"
+                @click="showDialog = true"
                 >新增角色</el-button
               >
             </el-row>
@@ -104,7 +108,12 @@
       </el-card>
     </div>
     <!-- 放置一个弹层组件 -->
-    <el-dialog title="编辑部门" :visible="showDialog" width="800px">
+    <el-dialog
+      title="编辑部门"
+      :visible="showDialog"
+      width="800px"
+      @close="btnCancel"
+    >
       <el-form
         ref="roleForm"
         label-width="90px"
@@ -134,7 +143,8 @@ import {
   getCompanyInfo,
   deleteRole,
   getRoleDetail,
-  updateRole
+  updateRole,
+  addRole
 } from '@/api/seeting'
 import { mapGetters } from 'vuex'
 export default {
@@ -186,6 +196,7 @@ export default {
       this.page.page = newPage
       this.getRoleList()
     },
+    //删除角色
     async deleteRole(id) {
       try {
         await this.$confirm('您确定要删除这个角色吗？')
@@ -197,6 +208,7 @@ export default {
         console.log(error)
       }
     },
+    //编辑角色
     async editRole(id) {
       this.roleForm = await getRoleDetail(id)
       this.showDialog = true
@@ -205,12 +217,11 @@ export default {
       try {
         await this.$refs.roleForm.validate()
         //校验通过才会执行下面的代码
-        console.log('111')
-        console.log('2222')
         if (this.roleForm.id) {
           await updateRole(this.roleForm)
         } else {
           // 新增业务
+          await addRole(this.roleForm)
         }
 
         this.getRoleList()
@@ -220,7 +231,14 @@ export default {
         console.log(error)
       }
     },
-    btnCancel() {}
+    btnCancel() {
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      this.showDialog = false
+      this.$refs.roleForm.resetFields()
+    }
   }
 }
 </script>
