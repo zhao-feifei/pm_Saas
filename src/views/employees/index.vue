@@ -104,12 +104,15 @@
         </el-row>
       </el-card>
     </div>
+    <!-- 放置组件弹层 -->
+    <AddEmployee></AddEmployee>
   </div>
 </template>
 
 <script>
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' //引入员工枚举对象
+import AddEmployee from './components/add-employee'
 export default {
   data() {
     return {
@@ -121,6 +124,9 @@ export default {
       },
       loading: false //显示遮罩层
     }
+  },
+  components: {
+    AddEmployee
   },
   created() {
     this.getEmployeeList()
