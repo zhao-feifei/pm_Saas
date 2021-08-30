@@ -8,7 +8,9 @@
         <template v-slot:after>
           <el-button size="small" type="success">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog = true"
+            >新增员工</el-button
+          >
         </template>
       </page-tools>
       <!-- 放置表格和分页 -->
@@ -105,7 +107,7 @@
       </el-card>
     </div>
     <!-- 放置组件弹层 -->
-    <AddEmployee></AddEmployee>
+    <AddEmployee :showDialog="showDialog"></AddEmployee>
   </div>
 </template>
 
@@ -122,7 +124,8 @@ export default {
         size: 10,
         total: 0
       },
-      loading: false //显示遮罩层
+      loading: false, //显示遮罩层
+      showDialog: false
     }
   },
   components: {
