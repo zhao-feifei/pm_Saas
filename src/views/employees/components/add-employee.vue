@@ -28,7 +28,14 @@
           v-model="formData.formOfEmployment"
           style="width:80%"
           placeholder="请选择"
-        />
+        >
+          <el-option
+            v-for="item in EmployeeEnum.hireType"
+            :key="item.id"
+            :label="item.value"
+            :value="item.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input
@@ -51,6 +58,7 @@
           :default-expand-all="true"
           v-loading="loading"
           v-if="showTree"
+          @node-click="selectNode"
         ></el-tree>
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
@@ -76,6 +84,7 @@
 <script>
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
+import EmployeeEnum from '@/api/constant/employees'
 export default {
   props: {
     showDialog: {
@@ -85,6 +94,7 @@ export default {
   },
   data() {
     return {
+      EmployeeEnum,
       //弹层表单数据
       formData: {
         username: '',
@@ -130,6 +140,7 @@ export default {
     }
   },
   methods: {
+    //获取部门  加载树形组件
     async getDepartments() {
       this.showTree = true
       this.loading = true
@@ -137,6 +148,10 @@ export default {
       //   console.log(depts)
       this.treeData = tranListToTreeData(depts, '')
       this.loading = false
+    },
+    selectNode(node) {
+      this.formData.departmentName = node.name
+      this.showTree = false
     }
   }
 }
