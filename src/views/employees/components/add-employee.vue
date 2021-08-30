@@ -42,7 +42,16 @@
           v-model="formData.departmentName"
           style="width:80%"
           placeholder="请选择部门"
+          @focus="getDepartments"
         />
+        <!-- 部门的树形结构 -->
+        <el-tree
+          :data="treeData"
+          :props="{ label: 'name' }"
+          :default-expand-all="true"
+          v-loading="loading"
+          v-if="showTree"
+        ></el-tree>
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker
@@ -65,6 +74,8 @@
 </template>
 
 <script>
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils'
 export default {
   props: {
     showDialog: {
@@ -74,6 +85,7 @@ export default {
   },
   data() {
     return {
+      //弹层表单数据
       formData: {
         username: '',
         mobile: '',
@@ -83,6 +95,7 @@ export default {
         timeOfEntry: '',
         correctionTime: ''
       },
+      //弹层表单验证规则
       rules: {
         username: [
           { required: true, message: '用户姓名不能为空', trigger: 'blur' },
@@ -110,7 +123,20 @@ export default {
           { required: true, message: '部门不能为空', trigger: 'change' }
         ],
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }]
-      }
+      },
+      treeData: [], //定义数组接收转换后的树形结构
+      showTree: false, //默认不显示树形组件
+      loading: false
+    }
+  },
+  methods: {
+    async getDepartments() {
+      this.showTree = true
+      this.loading = true
+      const { depts } = await getDepartments()
+      //   console.log(depts)
+      this.treeData = tranListToTreeData(depts, '')
+      this.loading = false
     }
   }
 }
