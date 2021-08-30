@@ -1,7 +1,17 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog" width="740px">
+  <el-dialog
+    title="新增员工"
+    :visible="showDialog"
+    width="740px"
+    @close="btnCancel"
+  >
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form
+      ref="addEmployee"
+      :model="formData"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item label="姓名" prop="username">
         <el-input
           v-model="formData.username"
@@ -73,8 +83,8 @@
     <template v-slot:footer>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOk">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -84,6 +94,7 @@
 <script>
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
+import { addEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 export default {
   props: {
@@ -152,6 +163,34 @@ export default {
     selectNode(node) {
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    //点击取消
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields()
+      this.$emit('update:showDialog', false)
+    },
+    //点击确定
+    async btnOk() {
+      try {
+        //校验表单
+        await this.$refs.addEmployee.validate()
+        await addEmployee(this.formData)
+        // this.$parent 可以直接调用到父组件的实例 实际上就是父组件this
+        this.$parent.getEmployeeList()
+        this.$parent.showDialog = false
+        this.$message.success('新增成功!')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

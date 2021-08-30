@@ -107,7 +107,7 @@
       </el-card>
     </div>
     <!-- 放置组件弹层 -->
-    <AddEmployee :showDialog="showDialog"></AddEmployee>
+    <AddEmployee :showDialog.sync="showDialog"></AddEmployee>
   </div>
 </template>
 
