@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "0.18.1",
     "core-js": "3.6.5",
+    "cos-js-sdk-v5": "^1.2.18",
     "element-ui": "2.13.2",
     "eslint": "^7.32.0",
     "file-saver": "^2.0.5",
