@@ -37,7 +37,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="手机">
-            <el-input v-model="userInfo.mobile" />
+            <el-input v-model="userInfo.mobile" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -388,6 +388,12 @@
 
 <script>
 import EmployeeEnum from '@/api/constant/employees'
+import {
+  getPersonalDetail,
+  updatePersonal,
+  saveUserDetailById
+} from '@/api/employees'
+import { getUserDetailById } from '@/api/user'
 
 export default {
   data() {
@@ -458,6 +464,26 @@ export default {
         proofOfDepartureOfFormerCompany: '', // 前公司离职证明
         remarks: '' // 备注
       }
+    }
+  },
+  created() {
+    this.getUserDetailById()
+    this.getPersonalDetail()
+  },
+  methods: {
+    async getUserDetailById() {
+      this.userInfo = await getUserDetailById(this.userId)
+    },
+    async getPersonalDetail() {
+      this.formData = await getPersonalDetail(this.userId)
+    },
+    async saveUser() {
+      await saveUserDetailById(this.userInfo)
+      this.$message.success('保存用户信息成功!')
+    },
+    async savePersonal() {
+      await updatePersonal(this.formData)
+      this.$message.success('保存信息成功!')
     }
   }
 }
