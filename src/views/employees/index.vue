@@ -103,7 +103,9 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)"
+                >角色</el-button
+              >
               <el-button type="text" size="small" @click="delEmployee(row.id)"
                 >删除</el-button
               >
@@ -142,6 +144,17 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <!-- 分配角色弹层组件 -->
+    <assign-role
+      ref="assignRole"
+      :show-role-dialog.sync="showRoleDialog"
+      :user-id="userId"
+    />
+    <!-- <AssignRole
+      ref="assignRole"
+      :show-role-dialog.sync="showRoleDialog"
+      :user-id="userId"
+    ></AssignRole> -->
   </div>
 </template>
 
@@ -151,6 +164,7 @@ import EmployeeEnum from '@/api/constant/employees' //引入员工枚举对象
 import AddEmployee from './components/add-employee'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
+import AssignRole from './components/assign-role'
 // import {formatDate} from ''
 export default {
   data() {
@@ -163,11 +177,14 @@ export default {
       },
       loading: false, //显示遮罩层
       showDialog: false,
-      showCodeDialog: false //控制二维码的弹层显示与隐藏
+      showCodeDialog: false, //控制二维码的弹层显示与隐藏
+      showRoleDialog: false, //显示分配角色弹层
+      userId: null //
     }
   },
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
   created() {
     this.getEmployeeList()
@@ -285,6 +302,7 @@ export default {
     //     (date < 10 ? '0' + date : date)
     //   )
     // }
+    //点击头像显示二维码的函数
     showQrCode(url) {
       // url存在的情况下 才弹出层
       // console.log('我是if条件外面的url：', url)
@@ -300,6 +318,12 @@ export default {
       } else {
         this.$message.warning('该用户还未上传头像')
       }
+    },
+    //角色 的点击函数
+    async editRole(id) {
+      this.userId = id
+      await this.$refs.assignRole.getUserDetailById(id) //调用子组件的方法
+      this.showRoleDialog = true
     }
   }
 }
