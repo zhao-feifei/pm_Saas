@@ -8,6 +8,7 @@
       :on-remove="handleRemove"
       :on-change="changeFile"
       :limit="1"
+      :http-request="upload"
       :before-upload="beforeUpload"
       :class="{ disabled: fileComputed }"
     >
@@ -21,6 +22,12 @@
 </template>
 
 <script>
+import COS from 'cos-js-sdk-v5' // 引入腾讯云的包
+//实例化cos对象
+const cos = new COS({
+  SecretId: 'AKIDhDTSAbleFZcPwCAuRoxsZ1GI9nETVM1S', //身份识别ID
+  SecretKey: 'KSMUUGm0xd2A1buwgAOL1QZR2MQDjyxe' //身份秘钥
+}) // 实例化的包 已经具有了上传的能力 可以上传到该账号里面的存储桶了
 export default {
   data() {
     return {
@@ -70,6 +77,23 @@ export default {
         return false
       }
       return true
+    },
+    //上传操作
+    upload(params) {
+      if (params.file) {
+        cos.putObject(
+          {
+            Bucket: 'zhao-feifei-1303816190' /* 必须 */,
+            Region: 'ap-beijing' /* 存储桶所在地域，必须字段 */,
+            Key: params.file.name /* 必须 */,
+            StorageClass: 'STANDARD',
+            Body: params.file // 上传文件对象
+          },
+          function(err, data) {
+            console.log(err || data)
+          }
+        )
+      }
     }
   }
 }
