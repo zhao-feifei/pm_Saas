@@ -14,7 +14,11 @@
     >
       <i class="el-icon-plus"></i>
     </el-upload>
-
+    <el-progress
+      v-if="showPercent"
+      :percentage="percent"
+      style="width: 180px"
+    ></el-progress>
     <el-dialog title="图片预览" :visible.sync="showDialog">
       <img :src="imgUrl" style="width:100%" alt="" />
     </el-dialog>
@@ -31,14 +35,12 @@ const cos = new COS({
 export default {
   data() {
     return {
-      fileList: [
-        {
-          url:
-            'https://img1.baidu.com/it/u=2786765109,1819282822&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500'
-        }
-      ], // 图片地址设置为数组
+      fileList: [], // 图片地址设置为数组
       showDialog: false, // 控制显示弹层
-      imgUrl: ''
+      imgUrl: '',
+      currentFileUid: null,
+      percent: 0, //上传图片进度百分比
+      showPercent: false
     }
   },
   computed: {
@@ -76,6 +78,8 @@ export default {
         this.$message.error('图片大小最大不能超过5M')
         return false
       }
+      this.currentFileUid = file.uid
+      this.showPercent = true
       return true
     },
     //上传操作
@@ -87,10 +91,25 @@ export default {
             Region: 'ap-beijing' /* 存储桶所在地域，必须字段 */,
             Key: params.file.name /* 必须 */,
             StorageClass: 'STANDARD',
-            Body: params.file // 上传文件对象
+            Body: params.file, // 上传文件对象
+            onProgress: params => {
+              this.percent = params.percent * 100
+            }
           },
-          function(err, data) {
+          (err, data) => {
             console.log(err || data)
+            if (!err || data.statusCode === 200) {
+              this.fileList.map(item => {
+                if (item.uid === this.currentFileUid) {
+                  return { url: 'http://' + data.Location, upload: true }
+                  //upload: true表示图片已经上传
+                }
+                return item
+              })
+              // 重置百分比并隐藏
+              this.showPercent = false
+              this.percent = 0
+            }
           }
         )
       }
