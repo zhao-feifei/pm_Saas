@@ -18,6 +18,12 @@ export default {
       component: () => import('@/views/employees/detail'),
       hidden: true, //该内容不再左侧菜单显示
       meta: { title: '员工详情' }
+    },
+    {
+      path: 'print/:id',
+      component: () => import('@/views/employees/print'),
+      hidden: true,
+      meta: { title: '员工打印' }
     }
   ]
 }
