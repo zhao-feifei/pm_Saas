@@ -35,6 +35,17 @@
             prop="username"
             align="center"
           />
+          <el-table-column label="头像" align="center">
+            <!-- 插槽 -->
+            <template v-slot="{ row }">
+              <img
+                :src="row.staffPhoto"
+                @click="showQrCode(row.staffPhoto)"
+                v-imageerror="require('@/assets/common/bigUserHeader.png')"
+                style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+              />
+            </template>
+          </el-table-column>
           <el-table-column
             label="工号"
             sortable=""
@@ -120,6 +131,17 @@
     </div>
     <!-- 放置组件弹层 -->
     <AddEmployee :showDialog.sync="showDialog"></AddEmployee>
+    <!-- 二维码的弹层 -->
+    <el-dialog
+      title="二维码"
+      :visible.sync="showCodeDialog"
+      @close="imgUrl = ''"
+      width="300px"
+    >
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -128,6 +150,7 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' //引入员工枚举对象
 import AddEmployee from './components/add-employee'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 // import {formatDate} from ''
 export default {
   data() {
@@ -139,7 +162,8 @@ export default {
         total: 0
       },
       loading: false, //显示遮罩层
-      showDialog: false
+      showDialog: false,
+      showCodeDialog: false //控制二维码的弹层显示与隐藏
     }
   },
   components: {
@@ -245,7 +269,7 @@ export default {
       })
       // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
       // 需要处理时间格式问题
-    }
+    },
     // formatDate(numb, format) {
     //   const time = new Date((numb - 1) * 24 * 3600000 + 1)
     //   time.setYear(time.getFullYear() - 70)
@@ -261,6 +285,22 @@ export default {
     //     (date < 10 ? '0' + date : date)
     //   )
     // }
+    showQrCode(url) {
+      // url存在的情况下 才弹出层
+      // console.log('我是if条件外面的url：', url)
+      if (url) {
+        // console.log('1111')
+        // console.log('我是if条件里面的url：', url)
+        this.showCodeDialog = true // 数据更新了 但是弹层不会立刻出现  页面的渲染是异步的！！！！
+        this.$nextTick(() => {
+          // 此时可以确认已经有ref对象了
+          QrCode.toCanvas(this.$refs.myCanvas, url) // 将地址转化成二维码
+          // 如果转化的二维码后面信息 是一个地址的话 就会跳转到该地址 如果不是地址就会显示内容
+        })
+      } else {
+        this.$message.warning('该用户还未上传头像')
+      }
+    }
   }
 }
 </script>

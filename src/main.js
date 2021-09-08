@@ -15,12 +15,19 @@ import Component from '@/components'
 import '@/icons' // icon
 import '@/permission'
 import * as filters from '@/filters'
+import * as directives from '@/directives'
 Vue.use(Component) // 注册自己的插件
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key]) //注册自定义过滤器
+})
+// 注册自定义指令
+// 遍历所有的导出的指令对象 完成自定义全局注册
+Object.keys(directives).forEach(key => {
+  // 注册自定义指令
+  Vue.directive(key, directives[key])
 })
 Vue.config.productionTip = false
 
