@@ -39,7 +39,7 @@ service.interceptors.response.use(
   response => {
     const { success, message, data } = response.data
     if (success) {
-      console.log(data)
+      // console.log(data)
       return data
     } else {
       Message.error(message)
