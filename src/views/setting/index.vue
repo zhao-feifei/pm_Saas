@@ -33,7 +33,12 @@
               </el-table-column>
               <el-table-column align="center" label="操作">
                 <template slot-scope="{ row }">
-                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button
+                    size="small"
+                    type="success"
+                    @click="assignPerm(row.id)"
+                    >分配权限</el-button
+                  >
                   <el-button
                     size="small"
                     type="primary"
@@ -134,10 +139,29 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 分配权限的弹层 -->
+    <el-dialog title="分配权限" :visible="showPermDialog">
+      <el-tree
+        :props="defaultProps"
+        :data="permData"
+        :show-checkbox="true"
+        :default-checked-keys="selectCheck"
+        node-key="id"
+      ></el-tree>
+
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small">确定</el-button>
+          <el-button type="primary" size="small">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { tranListToTreeData } from '@/utils'
+import { getPermissionList } from '@/api/permission'
 import {
   getRoleList,
   getCompanyInfo,
@@ -170,7 +194,14 @@ export default {
         name: [
           { required: true, message: '角色名称不能为空！', trigger: 'blur' }
         ]
-      }
+      },
+      showPermDialog: false,
+      permData: [], //接收权限数据的树形结构
+      defaultProps: {
+        label: 'name'
+      },
+      userId: null, //用来存储分配角色的 id
+      selectCheck: []
     }
   },
   computed: {
@@ -223,7 +254,6 @@ export default {
           // 新增业务
           await addRole(this.roleForm)
         }
-
         this.getRoleList()
         this.$message.success('操作成功!')
         this.showDialog = false
@@ -238,6 +268,14 @@ export default {
       }
       this.showDialog = false
       this.$refs.roleForm.resetFields()
+    },
+    async assignPerm(id) {
+      this.permData = tranListToTreeData(await getPermissionList(), '0')
+      //记录下分配角色的id
+      this.userId = id
+      const { permIds } = await getRoleDetail(id)
+      this.selectCheck = permIds
+      this.showPermDialog = true
     }
   }
 }
