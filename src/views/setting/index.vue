@@ -140,8 +140,13 @@
       </el-row>
     </el-dialog>
     <!-- 分配权限的弹层 -->
-    <el-dialog title="分配权限" :visible="showPermDialog">
+    <el-dialog
+      title="分配权限"
+      :visible="showPermDialog"
+      @close="btnPermCancel"
+    >
       <el-tree
+        ref="permTree"
         :props="defaultProps"
         :data="permData"
         :show-checkbox="true"
@@ -151,8 +156,12 @@
 
       <el-row slot="footer" type="flex" justify="center">
         <el-col :span="6">
-          <el-button type="primary" size="small">确定</el-button>
-          <el-button type="primary" size="small">取消</el-button>
+          <el-button type="primary" size="small" @click="btnPermOk"
+            >确定</el-button
+          >
+          <el-button type="primary" size="small" @click="btnPermCancel"
+            >取消</el-button
+          >
         </el-col>
       </el-row>
     </el-dialog>
@@ -168,7 +177,8 @@ import {
   deleteRole,
   getRoleDetail,
   updateRole,
-  addRole
+  addRole,
+  assignPerm
 } from '@/api/seeting'
 import { mapGetters } from 'vuex'
 export default {
@@ -200,7 +210,7 @@ export default {
       defaultProps: {
         label: 'name'
       },
-      userId: null, //用来存储分配角色的 id
+      roleId: null, //用来存储分配角色的 id
       selectCheck: []
     }
   },
@@ -272,10 +282,23 @@ export default {
     async assignPerm(id) {
       this.permData = tranListToTreeData(await getPermissionList(), '0')
       //记录下分配角色的id
-      this.userId = id
+      this.roleId = id
       const { permIds } = await getRoleDetail(id)
       this.selectCheck = permIds
       this.showPermDialog = true
+    },
+    //分配权限的确定点击事件
+    async btnPermOk() {
+      await assignPerm({
+        permIds: this.$refs.permTree.getCheckedKeys(),
+        id: this.roleId
+      })
+      this.$message.success('分配权限成功!')
+      this.showPermDialog = false
+    },
+    btnPermCancel() {
+      this.selectCheck = []
+      this.showPermDialog = false
     }
   }
 }
