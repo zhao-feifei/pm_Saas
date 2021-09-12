@@ -16,7 +16,16 @@ router.beforeEach(async (to, from, next) => {
       //没有则获取用户资料
       if (!store.getters.userId) {
         //强制变成同步代码
-        await store.dispatch('user/getUserInfo')
+        //async函数return的内容用await就能接收
+        const { roles } = await store.dispatch('user/getUserInfo')
+        //筛选用户的可用路由
+        const routes = await store.dispatch(
+          'permission/filterRoutes',
+          roles.menus
+        )
+        //routes就是筛选得到的动态路由
+        router.addRoutes(routes) //添加动态路由到路由表
+        next(to.path)
       }
       next()
     }
