@@ -1,5 +1,5 @@
 //专门处理权限路由的模块
-import { constantRoutes } from '@/router'
+import { constantRoutes, asyncRoutes } from '@/router'
 
 const state = {
   routes: constantRoutes // 所有人默认拥有静态路由
@@ -14,7 +14,20 @@ const mutations = {
     state.routes = [...constantRoutes, ...newRoutes]
   }
 }
-const actions = {}
+const actions = {
+  //筛选权限路由
+  //第二个参数为当前用户拥有的权限
+  //asyncRoutes是所有的动态路由
+  filterRoutes(context, menus) {
+    const routes = []
+    menus.forEach(key => {
+      routes.push(...asyncRoutes.filter(item => item.name === key))
+      //得到的routers就是用户拥有的动态路由权限
+    })
+    context.commit('setRoutes', routes) //mutations
+    return routes // 这里为什么还要return  state数据 是用来 显示左侧菜单用的  return  是给路由addRoutes用的
+  }
+}
 export default {
   namespaced: true,
   state,
