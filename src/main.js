@@ -16,6 +16,7 @@ import '@/icons' // icon
 import '@/permission'
 import * as filters from '@/filters'
 import * as directives from '@/directives'
+import CheckPermission from '@/mixin/checkPermission'
 Vue.use(Component) // 注册自己的插件
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
@@ -29,6 +30,8 @@ Object.keys(directives).forEach(key => {
   // 注册自定义指令
   Vue.directive(key, directives[key])
 })
+//全局混入检查对象
+Vue.mixin(CheckPermission) //所有的组件都拥有这个方法
 Vue.config.productionTip = false
 
 new Vue({
