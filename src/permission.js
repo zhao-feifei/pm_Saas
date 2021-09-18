@@ -24,7 +24,10 @@ router.beforeEach(async (to, from, next) => {
           roles.menus
         )
         //routes就是筛选得到的动态路由
-        router.addRoutes(routes) //添加动态路由到路由表
+        router.addRoutes([
+          ...routes,
+          { path: '*', redirect: '/404', hidden: true }
+        ]) //添加动态路由到路由表
         next(to.path)
       }
       next()
