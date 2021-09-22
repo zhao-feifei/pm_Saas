@@ -25,11 +25,13 @@
       <!-- 左侧内容 -->
       <el-col :span="13" style="padding-right:26px">
         <!-- 工作日历 -->
+
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>工作日历</span>
           </div>
           <!-- 放置日历组件 -->
+          <work-calendar />
         </el-card>
         <!-- 公告 -->
         <el-card class="box-card">
@@ -136,9 +138,13 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapState } = createNamespacedHelpers('user')
 import { mapGetters } from 'vuex'
+import WorkCalendar from './components/work-calendar'
 
 export default {
   name: 'Dashboard',
+  components: {
+    WorkCalendar
+  },
   data() {
     return {
       defaultImg: require('@/assets/common/head.jpg')
