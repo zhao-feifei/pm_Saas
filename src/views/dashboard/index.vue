@@ -92,8 +92,14 @@
                 >加班离职</el-button
               >
               <el-button class="sideBtn">请假调休</el-button>
-              <el-button class="sideBtn">审批列表</el-button>
-              <el-button class="sideBtn">我的信息</el-button>
+              <el-button
+                class="sideBtn"
+                @click="$router.push('/users/approvals')"
+                >审批列表</el-button
+              >
+              <el-button class="sideBtn" @click="$router.push('/users/info')"
+                >我的信息</el-button
+              >
             </div>
           </el-card>
 
@@ -138,7 +144,12 @@
     </div>
     <!-- 离职弹层 -->
     <el-dialog :visible="showDialog" title="离职申请">
-      <el-form label-width="120px" :model="ruleForm" :rules="rules">
+      <el-form
+        ref="ruleForm"
+        label-width="120px"
+        :model="ruleForm"
+        :rules="rules"
+      >
         <!-- 离职时间 -->
         <el-form-item label="期望离职时间" prop="exceptTime">
           <el-date-picker
@@ -157,8 +168,12 @@
         <!-- 确定和取消 -->
         <el-row type="flex" justify="center">
           <el-col :span="6">
-            <el-button type="primary" size="small">确定</el-button>
-            <el-button type="primary" size="small">取消</el-button>
+            <el-button type="primary" size="small" @click="btnOk"
+              >确定</el-button
+            >
+            <el-button type="primary" size="small" @click="btnCancel"
+              >取消</el-button
+            >
           </el-col>
         </el-row>
       </el-form>
@@ -172,6 +187,7 @@ const { mapState } = createNamespacedHelpers('user')
 import { mapGetters } from 'vuex'
 import WorkCalendar from './components/work-calendar'
 import Radar from './components/radar'
+import { startProcess } from '@/api/approvals'
 
 export default {
   name: 'Dashboard',
@@ -205,6 +221,29 @@ export default {
   computed: {
     ...mapGetters(['name']),
     ...mapState(['userInfo'])
+  },
+  methods: {
+    btnOk() {
+      this.$refs.ruleForm.validate(async isOK => {
+        if (isOK) {
+          //调用接口
+          const data = { ...this.ruleForm, userId: this.userInfo.userId }
+          await startProcess(data)
+          this.$message.success('提交流程成功')
+          this.btnCancel()
+        }
+      })
+    },
+    btnCancel() {
+      this.showDialog = false
+      this.$refs.ruleForm.resetFields()
+      this.ruleForm = {
+        exceptTime: '',
+        reason: '',
+        processKey: 'process_dimission', // 特定的审批
+        processName: '离职'
+      }
+    }
   }
 }
 </script>
