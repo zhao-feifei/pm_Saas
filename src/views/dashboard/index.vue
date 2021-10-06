@@ -1,137 +1,165 @@
 <template>
-  <div class="dashboard-container">
-    <!-- 头部内容 -->
-    <el-card class="header-card">
-      <div>
-        <div class="fl headL">
-          <div class="headImg">
-            <!-- 处理默认图片 -->
-            <img :src="userInfo.staffPhoto" v-imageerror="defaultImg" />
-          </div>
-          <div class="headInfoTip">
-            <p class="firstChild">早安，{{ name }}，祝你开心每一天！</p>
-            <p class="lastChild">
-              {{ userInfo.username }} | {{ userInfo.companyName }}-{{
-                userInfo.departmentName
-              }}
-            </p>
-          </div>
-        </div>
-        <div class="fr" />
-      </div>
-    </el-card>
-    <!-- 主要内容 -->
-    <el-row type="flex" justify="space-between">
-      <!-- 左侧内容 -->
-      <el-col :span="13" style="padding-right:26px">
-        <!-- 工作日历 -->
-
-        <el-card class="box-card">
-          <div slot="header" class="header">
-            <span>工作日历</span>
-          </div>
-          <!-- 放置日历组件 -->
-          <work-calendar />
-        </el-card>
-        <!-- 公告 -->
-        <el-card class="box-card">
-          <div class="advContent">
-            <div class="title">公告</div>
-            <div class="contentItem">
-              <ul class="noticeList">
-                <li>
-                  <div class="item">
-                    <img src="@/assets/common/img.jpeg" alt="" />
-                    <div>
-                      <p>
-                        <span class="col">朱继柳</span> 发布了
-                        第1期“传智大讲堂”互动讨论获奖名单公布
-                      </p>
-                      <p>2018-07-21 15:21:38</p>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="item">
-                    <img src="@/assets/common/img.jpeg" alt="" />
-                    <div>
-                      <p>
-                        <span class="col">朱继柳</span> 发布了
-                        第2期“传智大讲堂”互动讨论获奖名单公布
-                      </p>
-                      <p>2018-07-21 15:21:38</p>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="item">
-                    <img src="@/assets/common/img.jpeg" alt="" />
-                    <div>
-                      <p>
-                        <span class="col">朱继柳</span> 发布了
-                        第3期“传智大讲堂”互动讨论获奖名单公布
-                      </p>
-                      <p>2018-07-21 15:21:38</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+  <div>
+    <div class="dashboard-container">
+      <!-- 头部内容 -->
+      <el-card class="header-card">
+        <div>
+          <div class="fl headL">
+            <div class="headImg">
+              <!-- 处理默认图片 -->
+              <img :src="userInfo.staffPhoto" v-imageerror="defaultImg" />
+            </div>
+            <div class="headInfoTip">
+              <p class="firstChild">早安，{{ name }}，祝你开心每一天！</p>
+              <p class="lastChild">
+                {{ userInfo.username }} | {{ userInfo.companyName }}-{{
+                  userInfo.departmentName
+                }}
+              </p>
             </div>
           </div>
-        </el-card>
-      </el-col>
-      <!-- 右侧内容 -->
-      <el-col :span="11">
-        <el-card class="box-card">
-          <div class="header headTit">
-            <span>流程申请</span>
-          </div>
-          <div class="sideNav">
-            <el-button class="sideBtn">加班离职</el-button>
-            <el-button class="sideBtn">请假调休</el-button>
-            <el-button class="sideBtn">审批列表</el-button>
-            <el-button class="sideBtn">我的信息</el-button>
-          </div>
-        </el-card>
+          <div class="fr" />
+        </div>
+      </el-card>
+      <!-- 主要内容 -->
+      <el-row type="flex" justify="space-between">
+        <!-- 左侧内容 -->
+        <el-col :span="13" style="padding-right:26px">
+          <!-- 工作日历 -->
 
-        <!-- 绩效指数 -->
-        <el-card class="box-card">
-          <div slot="header" class="header">
-            <span>绩效指数</span>
-          </div>
-          <!-- 放置雷达图 -->
-          <radar></radar>
-        </el-card>
-        <!-- 帮助连接 -->
-        <el-card class="box-card">
-          <div class="header headTit">
-            <span>帮助链接</span>
-          </div>
-          <div class="sideLink">
-            <el-row>
-              <el-col :span="8">
-                <a href="#">
-                  <span class="icon iconGuide" />
-                  <p>入门指南</p>
-                </a>
-              </el-col>
-              <el-col :span="8">
-                <a href="#">
-                  <span class="icon iconHelp" />
-                  <p>在线帮助手册</p>
-                </a>
-              </el-col>
-              <el-col :span="8">
-                <a href="#">
-                  <span class="icon iconTechnology" />
-                  <p>联系技术支持</p>
-                </a>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+          <el-card class="box-card">
+            <div slot="header" class="header">
+              <span>工作日历</span>
+            </div>
+            <!-- 放置日历组件 -->
+            <work-calendar />
+          </el-card>
+          <!-- 公告 -->
+          <el-card class="box-card">
+            <div class="advContent">
+              <div class="title">公告</div>
+              <div class="contentItem">
+                <ul class="noticeList">
+                  <li>
+                    <div class="item">
+                      <img src="@/assets/common/img.jpeg" alt="" />
+                      <div>
+                        <p>
+                          <span class="col">朱继柳</span> 发布了
+                          第1期“传智大讲堂”互动讨论获奖名单公布
+                        </p>
+                        <p>2018-07-21 15:21:38</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="item">
+                      <img src="@/assets/common/img.jpeg" alt="" />
+                      <div>
+                        <p>
+                          <span class="col">朱继柳</span> 发布了
+                          第2期“传智大讲堂”互动讨论获奖名单公布
+                        </p>
+                        <p>2018-07-21 15:21:38</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="item">
+                      <img src="@/assets/common/img.jpeg" alt="" />
+                      <div>
+                        <p>
+                          <span class="col">朱继柳</span> 发布了
+                          第3期“传智大讲堂”互动讨论获奖名单公布
+                        </p>
+                        <p>2018-07-21 15:21:38</p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <!-- 右侧内容 -->
+        <el-col :span="11">
+          <el-card class="box-card">
+            <div class="header headTit">
+              <span>流程申请</span>
+            </div>
+            <div class="sideNav">
+              <el-button class="sideBtn" @click="showDialog = true"
+                >加班离职</el-button
+              >
+              <el-button class="sideBtn">请假调休</el-button>
+              <el-button class="sideBtn">审批列表</el-button>
+              <el-button class="sideBtn">我的信息</el-button>
+            </div>
+          </el-card>
+
+          <!-- 绩效指数 -->
+          <el-card class="box-card">
+            <div slot="header" class="header">
+              <span>绩效指数</span>
+            </div>
+            <!-- 放置雷达图 -->
+            <radar></radar>
+          </el-card>
+          <!-- 帮助连接 -->
+          <el-card class="box-card">
+            <div class="header headTit">
+              <span>帮助链接</span>
+            </div>
+            <div class="sideLink">
+              <el-row>
+                <el-col :span="8">
+                  <a href="#">
+                    <span class="icon iconGuide" />
+                    <p>入门指南</p>
+                  </a>
+                </el-col>
+                <el-col :span="8">
+                  <a href="#">
+                    <span class="icon iconHelp" />
+                    <p>在线帮助手册</p>
+                  </a>
+                </el-col>
+                <el-col :span="8">
+                  <a href="#">
+                    <span class="icon iconTechnology" />
+                    <p>联系技术支持</p>
+                  </a>
+                </el-col>
+              </el-row>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+    <!-- 离职弹层 -->
+    <el-dialog :visible="showDialog" title="离职申请">
+      <el-form label-width="120px">
+        <!-- 离职时间 -->
+        <el-form-item label="期望离职时间">
+          <el-date-picker type="date" placeholder="date"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="离职原因">
+          <el-input
+            type="textarea"
+            style="width: 70%;"
+            :rows="3"
+            v-model="model"
+          ></el-input>
+        </el-form-item>
+        <!-- 确定和取消 -->
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button type="primary" size="small">确定</el-button>
+            <el-button type="primary" size="small">取消</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -150,7 +178,8 @@ export default {
   },
   data() {
     return {
-      defaultImg: require('@/assets/common/head.jpg')
+      defaultImg: require('@/assets/common/head.jpg'),
+      showDialog: false
     }
   },
   computed: {
