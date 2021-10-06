@@ -138,17 +138,20 @@
     </div>
     <!-- 离职弹层 -->
     <el-dialog :visible="showDialog" title="离职申请">
-      <el-form label-width="120px">
+      <el-form label-width="120px" :model="ruleForm" :rules="rules">
         <!-- 离职时间 -->
-        <el-form-item label="期望离职时间">
-          <el-date-picker type="date" placeholder="date"></el-date-picker>
+        <el-form-item label="期望离职时间" prop="exceptTime">
+          <el-date-picker
+            v-model="ruleForm.exceptTime"
+            type="date"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="离职原因">
+        <el-form-item label="离职原因" prop="reason">
           <el-input
             type="textarea"
             style="width: 70%;"
             :rows="3"
-            v-model="model"
+            v-model="ruleForm.reason"
           ></el-input>
         </el-form-item>
         <!-- 确定和取消 -->
@@ -179,7 +182,24 @@ export default {
   data() {
     return {
       defaultImg: require('@/assets/common/head.jpg'),
-      showDialog: false
+      showDialog: false,
+      // 离职表单
+      ruleForm: {
+        //离职时间
+        exceptTime: '',
+        //离职原因
+        reason: '',
+        processKey: 'process_dimission', // 特定的审批
+        processName: '离职'
+      },
+      rules: {
+        exceptTime: [
+          { trigger: 'blur', required: true, message: '离职时间不能为空' }
+        ],
+        reason: [
+          { trigger: 'blur', required: true, message: '离职原因不能为空' }
+        ]
+      }
     }
   },
   computed: {
