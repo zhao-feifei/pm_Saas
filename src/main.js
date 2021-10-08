@@ -14,11 +14,15 @@ import router from './router'
 import Component from '@/components'
 import '@/icons' // icon
 import '@/permission'
+import i18n from '@/lang'
 import * as filters from '@/filters'
 import * as directives from '@/directives'
 import CheckPermission from '@/mixin/checkPermission'
 Vue.use(Component) // 注册自己的插件
 Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 Object.keys(filters).forEach(key => {
@@ -38,5 +42,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
