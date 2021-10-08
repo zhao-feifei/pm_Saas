@@ -12,6 +12,8 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <!-- 放置全屏插件 -->
+      <!-- <screen-full class="right-menu-item"></screen-full> -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
@@ -170,6 +172,9 @@ export default {
           color: #fff;
         }
       }
+    }
+    .right-menu-item {
+      vertical-align: middle;
     }
   }
 }
